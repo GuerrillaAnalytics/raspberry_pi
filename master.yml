@@ -10,6 +10,14 @@
   any_errors_fatal: true
 
   vars:
+    # ansible vault encrypt_string of media centre IP address
+    media_centre_ip_address: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          64373130343663396233633866393166313030393430353537333262393137653061623262343663
+          3938323763356339626165356332643738323065353138640a653036386265633336386334303334
+          37313832663835666161326432643265356633303431623538303036323338636533653331623861
+          6130393333356262310a346535613438633662376235313535333339343931343038663961313535
+          6636
 
   # gather variables about the hosts
   gather_facts: yes
@@ -73,6 +81,25 @@
       - watch
       - wget
       - whois
+
+  - name: Create directory for mounting NAS
+    become: yes
+    file:
+      path: /mnt/media-share
+      state: directory
+    tags: media
+
+  # Mount the media centre NAS drive so it can be unparsed
+  # by Kodi
+  - name: Mount media share NAS
+    become: yes
+    ansible.posix.mount:
+      path: /mnt/media-share
+      src: "{{ media_centre_ip_address }}:/nfs/media-share"
+      fstype: nfs
+      backup: yes
+      state: mounted
+    tags: media
 
   roles:
     - role: diodonfrost.java

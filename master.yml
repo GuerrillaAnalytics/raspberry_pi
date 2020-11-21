@@ -1,0 +1,84 @@
+---
+
+
+- name: Raspberry PI setup
+
+  # hosts group in the inventory file
+  # that this playbook is applied to
+  hosts: raspberry_pis
+
+  any_errors_fatal: true
+
+  vars:
+
+  # gather variables about the hosts
+  gather_facts: yes
+
+  tasks:
+  - name: ensure snap is installed
+    become: yes
+    apt:
+      name: snapd
+      state: latest
+    when: ansible_os_family == 'Debian'
+    tags: snap
+
+  - name: Upgrade apt cache
+    become: yes
+    apt:
+      upgrade: yes
+      cache_valid_time: 604800 #update cache if been more than one day in secs
+    when: ansible_os_family == 'Debian'
+    tags: upgrade
+
+  - name: Install xclip command line utility
+    become: yes
+    apt:
+      name: xclip
+      state: present
+    tags: cli
+
+  - name: install rclone
+    become: yes
+    apt:
+      name: rclone
+      state: latest
+    when: ansible_os_family == 'Debian'
+    tags: rclone
+
+  # iterate through multiple installations
+  # in one task
+  - name: Install Linux command line utilites
+    become: yes
+    apt:
+      name: ["{{ item }}"]
+      state: present
+    with_items:
+      - acl
+      - ntp
+      - curl
+      - gawk
+      - grep
+      - git
+      - unzip
+      - htop
+      - tmux
+      - tree
+      - mc
+      - bash-completion
+      - sed
+      - htop
+      - rename
+      - net-tools
+      - watch
+      - wget
+      - whois
+
+  roles:
+    - role: diodonfrost.java
+      become: yes
+      vars:
+        java_version: latest
+        openjre_install: true
+        openjdk_install: false
+      tags: java

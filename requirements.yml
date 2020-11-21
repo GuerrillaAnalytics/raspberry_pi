@@ -1,0 +1,6 @@
+
+#######################
+# Languages
+- name: diodonfrost.java
+  src: https://github.com/diodonfrost/ansible-role-java
+  version: 1.12.0

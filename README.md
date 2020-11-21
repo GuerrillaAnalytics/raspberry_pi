@@ -22,6 +22,8 @@ pip3 install -r requirements.txt
 ansible-galaxy install -r requirements.yml
 ```
 
+# Configure
+
 * create a new plain text inventory.ini file to replace the encrypted inventory.ini file
 
 * add the folling line of code to define a group of hosts
@@ -39,5 +41,14 @@ where these are your raspberry PI IP addresses and your ssh and sudo password fo
 ```
 ansible-vault encrypt inventory.ini
 ```
+
+* encrypt the IP address of NAS drive
+```
+ansible-vault encrypt_string 'XXX.YYY.X.YY' --name 'media_centre_ip_address'
+```
+
+* paste this encrypted string into the ```master.yml``` variable definition
+
+# Execute
 
 * execute the playbook with the prompt for your ansible vault password to decrypt your inventory file. This command is in ```build.sh``` file

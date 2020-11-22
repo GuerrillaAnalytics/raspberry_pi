@@ -54,6 +54,28 @@
     when: ansible_os_family == 'Debian'
     tags: rclone
 
+  # https://pimylifeup.com/raspberry-pi-screen-sharing/
+  - name: install vino remote desktop viewer
+    become: yes
+    apt:
+      name: vino
+      state: latest
+    when: ansible_os_family == 'Debian'
+    tags: vino
+
+  - name: Install vnc server
+    become: yes
+    apt:
+      update_cache: yes
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - realvnc-vnc-server
+      - realvnc-vnc-viewer
+    tags:
+      - vnc
+
+
   # iterate through multiple installations
   # in one task
   - name: Install Linux command line utilites
@@ -89,7 +111,7 @@
       state: directory
     tags: media
 
-  # Mount the media centre NAS drive so it can be unparsed
+  # Mount the media centre NAS drive so it can be accessed
   # by Kodi
   - name: Mount media share NAS
     become: yes
@@ -100,6 +122,14 @@
       backup: yes
       state: mounted
     tags: media
+
+  - name: install Kodi
+    become: yes
+    apt:
+      name: kodi
+      state: latest
+    when: ansible_os_family == 'Debian'
+    tags: kodi
 
   roles:
     - role: diodonfrost.java

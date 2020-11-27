@@ -54,6 +54,14 @@
     when: ansible_os_family == 'Debian'
     tags: rclone
 
+  - name: install ssh pass
+    become: yes
+    apt:
+      name: sshpass
+      state: latest
+    when: ansible_os_family == 'Debian'
+    tags: sshpass
+
   # https://pimylifeup.com/raspberry-pi-screen-sharing/
   - name: install vino remote desktop viewer
     become: yes
@@ -97,12 +105,16 @@
       - mc
       - bash-completion
       - sed
-      - htop
       - rename
       - net-tools
       - watch
       - wget
       - whois
+      - vim
+      - htop
+      - nmap
+      - atop
+    tags: terminal
 
   - name: Create directory for mounting NAS
     become: yes

@@ -127,6 +127,11 @@
       - iproute2
       - whiptail
       - dnsutils
+      - cron
+      - curl
+      - unzip
+      - idn2
+      - sqlite3
     tags: pihole-dependencies
 
   # https://www.mydailytutorials.com/ansible-create-directory/
@@ -138,6 +143,18 @@
       mode: "u=rwx,g=rwx,o=rx"
       recurse: yes
     tags: pihole
+
+  - name: Copy pihole setVars.conf file onto pi
+    become: yes
+    copy:
+      src: setupVars.conf
+      dest: /etc/pihole/setupVars.conf
+      owner: pi
+      group: pi
+      mode: u=rwx,g=rwx,o=rx
+      backup: yes
+    tags: pihole
+
 
   - name: Create directory for mounting NAS
     become: yes

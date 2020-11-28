@@ -116,6 +116,29 @@
       - atop
     tags: terminal
 
+  - name: Install pihole dependencies
+    become: yes
+    apt:
+      name: ["{{ item }}"]
+      state: present
+    with_items:
+      - dhcpcd5
+      - git
+      - iproute2
+      - whiptail
+      - dnsutils
+    tags: pihole-dependencies
+
+  # https://www.mydailytutorials.com/ansible-create-directory/
+  - name: create pihole directory with permission drwxrwxr-x
+    become: yes
+    file:
+      path: /etc/pihole
+      state: directory
+      mode: "u=rwx,g=rwx,o=rx"
+      recurse: yes
+    tags: pihole
+
   - name: Create directory for mounting NAS
     become: yes
     file:
